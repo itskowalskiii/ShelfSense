@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ShelfSense Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Work+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand" onclick="toggleSidebar()" style="cursor: pointer;">
+          <span class="toggle-arrow" id="toggleBtn">&#10148;</span>
+          <span class="brand-text">ShelfSense</span>
+        </div>
+
+        <div class="nav-title">Actions</div>
+        <nav class="nav">
+          <button class="nav-item">
+            <span class="icon">+</span>
+            <span class="nav-label">Add Product</span>
+          </button>
+          <button class="nav-item">
+            <span class="icon">&#9998;</span>
+            <span class="nav-label">Update Product</span>
+          </button>
+          <button class="nav-item">
+            <span class="icon">&#128465;</span>
+            <span class="nav-label">Delete Product</span>
+          </button>
+          <button class="nav-item">
+            <span class="icon">&#128276;</span>
+            <span class="nav-label">Check Alerts</span>
+          </button>
+        </nav>
+
+        <button class="exit">
+          <span class="nav-label">Exit</span>
+        </button>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div class="search">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search" />
+          </div>
+          <div class="status">
+            <div class="time" id="timeLine">11:11pm</div>
+            <div class="date" id="dateLine">April 25, 2026 | Sat</div>
+            <div class="tagline">
+              System online. Let&#39;s get your inventory in order!
+            </div>
+          </div>
+        </header>
+
+        <section class="section-header">
+          <h2>Categories</h2>
+          <div class="rule"></div>
+        </section>
+
+        <section class="cards">
+          <article class="card">
+            <div class="card-icon"><span>&#128214;</span></div>
+            <div class="card-meta">
+              <div class="count">0</div>
+              <div class="label">Books</div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-icon"><span>&#128218;</span></div>
+            <div class="card-meta">
+              <div class="count">0</div>
+              <div class="label">Magazines</div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-icon"><span>&#128206;</span></div>
+            <div class="card-meta">
+              <div class="count">0</div>
+              <div class="label">Stationery</div>
+            </div>
+          </article>
+        </section>
+
+        <section class="table-section">
+          <div class="table-header">
+            <div class="rule"></div>
+            <select class="filter">
+              <option>All</option>
+              <option>Books</option>
+              <option>Magazines</option>
+              <option>Stationery</option>
+            </select>
+          </div>
+
+          <div class="table">
+            <div class="table-row table-head">
+              <div>Name</div>
+              <div>Price</div>
+              <div>Quantity</div>
+              <div>Details</div>
+              <div>Category</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalOverlay" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Add Product</h3>
+          <span class="close-x" onclick="closeModal()">&times;</span>
+        </div>
+
+        <div class="modal-body"></div>
+
+        <div class="modal-footer">
+          <button class="pill secondary" onclick="closeModal()">Cancel</button>
+          <button class="pill" id="modalConfirmBtn">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+  
+    <script src="../js/script.js"></script>
+  </body>
+</html>
