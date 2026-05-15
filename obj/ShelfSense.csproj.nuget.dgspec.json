@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Acer\\Desktop\\COLLEGE\\vsc\\ShelfSense\\ShelfSense\\ShelfSense.csproj": {}
+    "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\ShelfSense.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Acer\\Desktop\\COLLEGE\\vsc\\ShelfSense\\ShelfSense\\ShelfSense.csproj": {
+    "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\ShelfSense.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Acer\\Desktop\\COLLEGE\\vsc\\ShelfSense\\ShelfSense\\ShelfSense.csproj",
+        "projectUniqueName": "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\ShelfSense.csproj",
         "projectName": "ShelfSense",
-        "projectPath": "C:\\Users\\Acer\\Desktop\\COLLEGE\\vsc\\ShelfSense\\ShelfSense\\ShelfSense.csproj",
-        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Acer\\Desktop\\COLLEGE\\vsc\\ShelfSense\\ShelfSense\\obj\\",
+        "projectPath": "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\ShelfSense.csproj",
+        "packagesPath": "C:\\Users\\Angelo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Angelo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -70,7 +70,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

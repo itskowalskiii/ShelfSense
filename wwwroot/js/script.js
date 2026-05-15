@@ -7,7 +7,7 @@ const CATEGORY_LABEL = { Book: "Books", Magazine: "Magazines", Stationery: "Stat
 const LOW_STOCK_THRESHOLD = 5;
 
 // UI REFERENCES
-const tableBody    = document.querySelector(".table");
+const tableBody = document.querySelector(".table-body");
 const dateLine     = document.getElementById("dateLine");
 const timeLine     = document.getElementById("timeLine");
 const modalOverlay = document.getElementById("modalOverlay");
@@ -52,10 +52,8 @@ async function loadInventory() {
 function renderTable() {
   if (!tableBody) return;
 
-  const header = tableBody.querySelector(".table-head");
-  tableBody.innerHTML = "";
-  if (header) tableBody.appendChild(header);
-
+    tableBody.innerHTML = "";
+  
   const filterVal = filterSelect ? filterSelect.value : "All";
   const searchVal = searchInput  ? searchInput.value.toLowerCase().trim() : "";
 
