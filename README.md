@@ -241,21 +241,30 @@ foreach (Product p in products)
 
 ```
 ShelfSense/
-│
-├── Controller/           API endpoints — receives and routes requests
-├── Database/             DatabaseHelper — MySQL connection and queries
-├── Models/               Product (abstract), Book, Magazine, Stationery
-├── Services/             InventoryService, StockAlertService
-│
-├── wwwroot/              Frontend — served as static files
-│   ├── html/             HTML pages
-│   ├── css/              Stylesheets
-│   └── js/               JavaScript — fetch API calls to backend
-│
-├── Program.cs            Entry point — registers services, sets up routing
-├── appsettings.json      Configuration (MySQL connection string)
-├── appsettings.Development.json
-└── ShelfSense.csproj     Project file — net10.0 + MySqlConnector 2.5.0
+├── Models/                         # Data models / entities
+│   └── Product.cs
+├── Frontend/                       # Client-side files
+│   └── wwwroot/
+│       ├── html/
+│       │   └── index.html          # Main HTML page
+│       ├── css/
+│       │   └── styles.css          # Stylesheet
+│       └── js/
+│           └── script.js           # Client-side logic
+├── Backend/                        # Server-side logic
+│   ├── Controller/                 # Handles HTTP requests
+│   │   └── InventoryController.cs
+│   ├── Services/                   # Business logic layer
+│   │   ├── InventoryServices.cs
+│   │   └── StockAlertServices.cs
+│   └── Database/                   # Database connection & helpers
+│       └── Databasehelper.cs
+├── Properties/                     # App launch settings
+│   └── launchSettings.json
+├── Program.cs                      # App entry point
+├── ShelfSense.csproj               # Project configuration
+├── shelfsense_db.sql               # Database schema
+└── README.md                       # Project documentation
 ```
 
 ---
@@ -293,26 +302,13 @@ mysql -u root -p
 ```
 
 ```sql
-CREATE DATABASE ShelfSenseDatabase;
-USE ShelfSenseDatabase;
+CREATE DATABASE ShelfSense_db;
+USE SShelfSense_db;
 SOURCE path/to/shelfsense_db.sql;
 ```
 
 > Replace `path/to/shelfsense_db.sql` with the actual file path.
 
-### 4. Configure Connection String
-
-Edit `appsettings.json`:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=ShelfSenseDatabase;User=root;Password=;"
-  }
-}
-```
-
-> Add your MySQL password if needed.
 
 ### 5. Restore Dependencies
 
