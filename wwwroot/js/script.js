@@ -4,10 +4,18 @@ let inventory = [];
 // Category 
 const CATEGORY_LABEL = { Book: "Books", Magazine: "Magazines", Stationery: "Stationery" };
 
-const LOW_STOCK_THRESHOLD = 5;
+const LOW_STOCK_THRESHOLDS = {
+  Book:       10,
+  Magazine:   10,
+  Stationery: 30,
+};
 
+function isLowStock(item) {
+  const threshold = LOW_STOCK_THRESHOLDS[item.category] ?? 10;
+  return item.quantity <= threshold;
+}
 // UI REFERENCES
-const tableBody    = document.querySelector(".table");
+const tableBody = document.querySelector(".table-body");
 const dateLine     = document.getElementById("dateLine");
 const timeLine     = document.getElementById("timeLine");
 const modalOverlay = document.getElementById("modalOverlay");
@@ -52,10 +60,8 @@ async function loadInventory() {
 function renderTable() {
   if (!tableBody) return;
 
-  const header = tableBody.querySelector(".table-head");
-  tableBody.innerHTML = "";
-  if (header) tableBody.appendChild(header);
-
+    tableBody.innerHTML = "";
+  
   const filterVal = filterSelect ? filterSelect.value : "All";
   const searchVal = searchInput  ? searchInput.value.toLowerCase().trim() : "";
 
@@ -77,14 +83,14 @@ function renderTable() {
   } else {
     filtered.forEach(item => {
       const globalIdx = inventory.indexOf(item);
-      const isLow     = item.quantity <= LOW_STOCK_THRESHOLD;
+      const low       = isLowStock(item);
       const row       = document.createElement("div");
-      row.className   = "table-row";
+      row.className   = low ? "table-row low-stock-row" : "table-row";
       row.innerHTML   = `
         <div>${item.name}</div>
         <div>&#8369;${parseFloat(item.price).toFixed(2)}</div>
-        <div style="color:${isLow ? "#c0392b" : "inherit"};font-weight:${isLow ? "600" : "400"}">
-          ${item.quantity}${isLow ? " &#9888;" : ""}
+        <div class="${low ? "low-stock-qty" : ""}">
+          ${item.quantity}${low ? " &#9888;" : ""}
         </div>
         <div><button class="pill view-btn" data-idx="${globalIdx}">View</button></div>
         <div>${CATEGORY_LABEL[item.category] || item.category}</div>
@@ -340,16 +346,43 @@ async function openAlertsModal() {
   if (lowItems.length === 0) {
     bodyHtml = `<p style="text-align:center;color:#6a4b37;padding:12px 0;">&#10003; All products are sufficiently stocked.</p>`;
   } else {
+    const grouped = {};
+    lowItems.forEach(i => {
+      const label = CATEGORY_LABEL[i.category] || i.category;
+      if (!grouped[label]) grouped[label] = [];
+      grouped[label].push(i);
+    });
+
     bodyHtml = `
-      <p style="color:#c0392b;font-size:0.85rem;margin:0 0 12px;">
-        ${lowItems.length} product(s) at or below ${LOW_STOCK_THRESHOLD} units:
-      </p>
-      ${lowItems.map(i => `
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5ccb2;">
-          <span>${i.name}</span>
-          <span style="color:#c0392b;font-weight:600;">${i.quantity} left</span>
-        </div>`).join("")}
-    `;
+      <div style="background:#fff3cd;border:1px solid #e6c97a;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:0.82rem;color:#7a5c00;">
+        &#9432;&nbsp; Thresholds: <strong>Books</strong> ≤ 10 &nbsp;|&nbsp; <strong>Magazines</strong> ≤ 10 &nbsp;|&nbsp; <strong>Stationery</strong> ≤ 30
+      </div>
+      <p style="color:#c0392b;font-size:0.85rem;margin:0 0 12px;font-weight:600;">
+        &#9888; ${lowItems.length} product(s) need restocking:
+      </p>`;
+
+    Object.entries(grouped).forEach(([label, items]) => {
+      bodyHtml += `
+        <div style="margin-bottom:12px;">
+          <div style="font-size:0.78rem;font-weight:700;color:#7a583f;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">
+            ${label}
+          </div>
+          ${items.map(i => {
+            const threshold = LOW_STOCK_THRESHOLDS[i.category] ?? 10;
+            const pct = Math.round((i.quantity / threshold) * 100);
+            return `
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #e5ccb2;">
+                <div>
+                  <div style="font-weight:600;">${i.name}</div>
+                  <div style="margin-top:4px;height:4px;width:120px;background:#e5ccb2;border-radius:4px;overflow:hidden;">
+                    <div style="height:100%;width:${Math.min(pct,100)}%;background:#c0392b;border-radius:4px;"></div>
+                  </div>
+                </div>
+                <span style="color:#c0392b;font-weight:700;">${i.quantity} left</span>
+              </div>`;
+          }).join("")}
+        </div>`;
+    });
   }
 
   setModalBody(bodyHtml);
