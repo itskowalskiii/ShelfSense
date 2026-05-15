@@ -230,18 +230,18 @@ body {
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
+  gap: 20px;
 }
 
 .card {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 12px;
   background: #fbf4e9; 
   border: 1px solid #d6b291;
-  border-radius: 20px;
-  padding: 30px;
+  border-radius: 14px;
+  padding: 16px 20px;
   box-shadow: var(--shadow);
 }
 

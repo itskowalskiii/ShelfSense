@@ -1,7 +1,7 @@
 const API = "/api/inventory";
 let inventory = [];
 
-//Category 
+// Category 
 const CATEGORY_LABEL = { Book: "Books", Magazine: "Magazines", Stationery: "Stationery" };
 
 const LOW_STOCK_THRESHOLD = 5;
@@ -15,13 +15,13 @@ const modalTitle   = document.getElementById("modalTitle");
 const filterSelect = document.querySelector(".filter");
 const searchInput  = document.querySelector(".search input");
 
-//SIDEBAR TOGGLES
+// SIDEBAR TOGGLES
 function toggleSidebar() {
   const app = document.getElementById("app");
   if (app) app.classList.toggle("collapsed");
 }
 
-//  LIVE CLOCK
+// LIVE CLOCK
 function updateClock() {
   const now = new Date();
   if (dateLine) {
@@ -356,7 +356,7 @@ async function openAlertsModal() {
   modalOverlay.style.display = "flex";
 
   const btn = getFreshConfirmBtn();
-  btn.textContent = "Close";
+  btn.textContent = "Confirm";
   btn.onclick = closeModal;
 }
 
@@ -398,7 +398,7 @@ function openViewModal(item) {
   modalOverlay.style.display = "flex";
 
   const btn = getFreshConfirmBtn();
-  btn.textContent = "Close";
+  btn.textContent = "Confirm";
   btn.onclick = closeModal;
 }
 
