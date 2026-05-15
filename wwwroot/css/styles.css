@@ -236,6 +236,7 @@ body {
   border-radius: 4px;
 }
 
+/* 6. CATEGORY CARDS*/
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -245,35 +246,43 @@ body {
 .card {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  justify-content: center; 
+  gap: 20px;              
   background: #fbf4e9; 
   border: 1px solid #d6b291;
   border-radius: 14px;
-  padding: 16px 20px;
+  padding: 25px;           
   box-shadow: var(--shadow);
 }
 
 .card-icon {
-  width: 110px;
-  height: 110px;
-  background: none; 
-  display: grid;
-  place-items: center;
-  font-size: 64px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;         
+  flex-shrink: 0;
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  text-align: left;
 }
 
 .card-meta .count {
-  font-size: 42px;
+  font-size: 36px;         
   font-weight: 700;
   color: var(--brown-700);
   font-family: "Playfair Display", serif;
+  line-height: 1;
 }
 
 .card-meta .label {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--brown-600);
+  margin-top: 2px;
 }
 
 /* 7. TABLES */
