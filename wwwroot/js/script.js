@@ -49,10 +49,25 @@ function updateClock() {
 async function loadInventory() {
   try {
     const res = await fetch(API);
-    inventory  = await res.json();
+
+    // Guard: check HTTP status before parsing
+    if (!res.ok) {
+      console.error(`Server error: ${res.status} ${res.statusText}`);
+      inventory = [];   // keep inventory a valid array
+      renderTable();
+      return;
+    }
+
+    const data = await res.json();
+
+    // Guard: ensure the response is actually an array
+    inventory = Array.isArray(data) ? data : [];
+
     renderTable();
   } catch (err) {
     console.error("Failed to load inventory:", err);
+    inventory = [];   // prevent inventory from being undefined/non-array
+    renderTable();
   }
 }
 
@@ -216,7 +231,7 @@ function readSpecificFields(type) {
 
 
 //  ADD PRODUCT
-function openAddModal() {
+async function openAddModal() {
   modalTitle.textContent = "Add Product";
   setModalBody(`
     <div class="input-group">
@@ -243,9 +258,11 @@ function openAddModal() {
     </div>
     <div id="specificFields" class="specific-fields-area"></div>
   `);
+
   toggleSpecificFields();
   modalOverlay.style.display = "flex";
 
+  // getFreshConfirmBtn() must be called AFTER setModalBody() AND display = "flex"
   const btn = getFreshConfirmBtn();
   btn.onclick = async () => {
     const name  = document.getElementById("pName")?.value.trim();
@@ -255,16 +272,32 @@ function openAddModal() {
 
     if (!name) { alert("Product Name is required!"); return; }
 
-    const product = { name, price, quantity: qty, category: type, ...readSpecificFields(type) };
+    const product = {
+      name,
+      price,
+      quantity: qty,
+      category: type,
+      ...readSpecificFields(type)
+    };
 
-    await fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(product)
-    });
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product)
+      });
 
-    await loadInventory();
-    closeModal();
+      if (!res.ok) {
+        const err = await res.json();
+        alert(`Failed to add product: ${err.error ?? res.statusText}`);
+        return;
+      }
+
+      await loadInventory();
+      closeModal();
+    } catch (err) {
+      alert(`Network error: ${err.message}`);
+    }
   };
 }
 
@@ -296,21 +329,22 @@ function openUpdateModal() {
     const item = inventory.find(i => i.name.toLowerCase() === target);
     if (!item) { alert("Product not found!"); return; }
 
-    await fetch(`${API}/${item.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        quantity: newQty   !== "" ? parseInt(newQty)        : item.quantity,
-        price:    newPrice !== "" ? parseFloat(newPrice)    : parseFloat(item.price)
-      })
-    });
-
-    await loadInventory();
-    closeModal();
+    try {
+      const res = await fetch(`${API}/${item.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          quantity: newQty   !== "" ? parseInt(newQty)     : item.quantity,
+          price:    newPrice !== "" ? parseFloat(newPrice) : parseFloat(item.price)
+        })
+      });
+      if (!res.ok) { const e = await res.json(); alert(`Update failed: ${e.error ?? res.statusText}`); return; }
+      await loadInventory();
+      closeModal();
+    } catch (err) { alert(`Network error: ${err.message}`); }
   };
 }
 
-//  DELETE PRODUCT
 function openDeleteModal() {
   modalTitle.textContent = "Delete Product";
   setModalBody(`
@@ -326,67 +360,80 @@ function openDeleteModal() {
   btn.onclick = async () => {
     const target = document.getElementById("delName")?.value.trim().toLowerCase();
     const item   = inventory.find(i => i.name.toLowerCase() === target);
-
     if (!item) { alert("Product not found!"); return; }
 
-    await fetch(`${API}/${item.id}`, { method: "DELETE" });
-    await loadInventory();
-    closeModal();
+    try {
+      const res = await fetch(`${API}/${item.id}`, { method: "DELETE" });
+      if (!res.ok) { const e = await res.json(); alert(`Delete failed: ${e.error ?? res.statusText}`); return; }
+      await loadInventory();
+      closeModal();
+    } catch (err) { alert(`Network error: ${err.message}`); }
   };
 }
 
 //CHECK ALERTS
 async function openAlertsModal() {
   modalTitle.textContent = "Stock Alerts";
-
-  const res      = await fetch(`${API}/alerts`);
-  const lowItems = await res.json();
-
-  let bodyHtml = "";
-  if (lowItems.length === 0) {
-    bodyHtml = `<p style="text-align:center;color:#6a4b37;padding:12px 0;">&#10003; All products are sufficiently stocked.</p>`;
-  } else {
-    const grouped = {};
-    lowItems.forEach(i => {
-      const label = CATEGORY_LABEL[i.category] || i.category;
-      if (!grouped[label]) grouped[label] = [];
-      grouped[label].push(i);
-    });
-
-    bodyHtml = `
-      <div style="background:#fff3cd;border:1px solid #e6c97a;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:0.82rem;color:#7a5c00;">
-        &#9432;&nbsp; Thresholds: <strong>Books</strong> ≤ 10 &nbsp;|&nbsp; <strong>Magazines</strong> ≤ 10 &nbsp;|&nbsp; <strong>Stationery</strong> ≤ 30
-      </div>
-      <p style="color:#c0392b;font-size:0.85rem;margin:0 0 12px;font-weight:600;">
-        &#9888; ${lowItems.length} product(s) need restocking:
-      </p>`;
-
-    Object.entries(grouped).forEach(([label, items]) => {
-      bodyHtml += `
-        <div style="margin-bottom:12px;">
-          <div style="font-size:0.78rem;font-weight:700;color:#7a583f;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">
-            ${label}
-          </div>
-          ${items.map(i => {
-            const threshold = LOW_STOCK_THRESHOLDS[i.category] ?? 10;
-            const pct = Math.round((i.quantity / threshold) * 100);
-            return `
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #e5ccb2;">
-                <div>
-                  <div style="font-weight:600;">${i.name}</div>
-                  <div style="margin-top:4px;height:4px;width:120px;background:#e5ccb2;border-radius:4px;overflow:hidden;">
-                    <div style="height:100%;width:${Math.min(pct,100)}%;background:#c0392b;border-radius:4px;"></div>
-                  </div>
-                </div>
-                <span style="color:#c0392b;font-weight:700;">${i.quantity} left</span>
-              </div>`;
-          }).join("")}
-        </div>`;
-    });
-  }
-
-  setModalBody(bodyHtml);
+  setModalBody(`<p style="text-align:center;color:#6a4b37;padding:12px 0;">Loading alerts...</p>`);
   modalOverlay.style.display = "flex";
+
+  try {
+    const res = await fetch(`${API}/alerts`);
+    if (!res.ok) {
+      setModalBody(`<p style="color:#c0392b;">Failed to load alerts: ${res.statusText}</p>`);
+      return;
+    }
+
+    const lowItems = await res.json();
+
+    let bodyHtml = "";
+    if (lowItems.length === 0) {
+      bodyHtml = `<p style="text-align:center;color:#6a4b37;padding:12px 0;">&#10003; All products are sufficiently stocked.</p>`;
+    } else {
+      const grouped = {};
+      lowItems.forEach(i => {
+        const label = CATEGORY_LABEL[i.category] || i.category;
+        if (!grouped[label]) grouped[label] = [];
+        grouped[label].push(i);
+      });
+
+      bodyHtml = `
+        <div style="background:#fff3cd;border:1px solid #e6c97a;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:0.82rem;color:#7a5c00;">
+          &#9432;&nbsp; Thresholds: <strong>Books</strong> ≤ 10 &nbsp;|&nbsp; <strong>Magazines</strong> ≤ 10 &nbsp;|&nbsp; <strong>Stationery</strong> ≤ 30
+        </div>
+        <p style="color:#c0392b;font-size:0.85rem;margin:0 0 12px;font-weight:600;">
+          &#9888; ${lowItems.length} product(s) need restocking:
+        </p>`;
+
+      Object.entries(grouped).forEach(([label, items]) => {
+        bodyHtml += `
+          <div style="margin-bottom:12px;">
+            <div style="font-size:0.78rem;font-weight:700;color:#7a583f;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">
+              ${label}
+            </div>
+            ${items.map(i => {
+              const threshold = LOW_STOCK_THRESHOLDS[i.category] ?? 10;
+              const pct = Math.round((i.quantity / threshold) * 100);
+              return `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #e5ccb2;">
+                  <div>
+                    <div style="font-weight:600;">${i.name}</div>
+                    <div style="margin-top:4px;height:4px;width:120px;background:#e5ccb2;border-radius:4px;overflow:hidden;">
+                      <div style="height:100%;width:${Math.min(pct,100)}%;background:#c0392b;border-radius:4px;"></div>
+                    </div>
+                  </div>
+                  <span style="color:#c0392b;font-weight:700;">${i.quantity} left</span>
+                </div>`;
+            }).join("")}
+          </div>`;
+      });
+    }
+
+    setModalBody(bodyHtml);
+
+  } catch (err) {
+    setModalBody(`<p style="color:#c0392b;">Network error: ${err.message}</p>`);
+  }
 
   const btn = getFreshConfirmBtn();
   btn.textContent = "Confirm";
@@ -395,28 +442,36 @@ async function openAlertsModal() {
 
 //  VIEW PRODUCT
 function openViewModal(item) {
+  console.log("Item data:", item);
   modalTitle.textContent = "Product Details";
 
   let specificHtml = "";
   if (item.category === "Book") {
+    const discounted = (item.price * 0.90).toFixed(2);
     specificHtml = `
       <div class="input-row">
         <div class="input-group"><label>Author</label><input type="text" value="${item.author || "—"}" readonly></div>
         <div class="input-group"><label>ISBN</label><input type="text" value="${item.isbn || "—"}" readonly></div>
       </div>
-      <div class="input-group"><label>Genre</label><input type="text" value="${item.genre || "—"}" readonly></div>`;
-  } else if (item.category === "Magazine") {
+      <div class="input-group"><label>Genre</label><input type="text" value="${item.genre || "—"}" readonly></div>
+      <div class="input-group"><label>Discounted Price (10% student discount)</label><input type="text" value="₱${discounted}" readonly style="color:#2e7d32;font-weight:600;"></div>`;
+  }else if (item.category === "Magazine") {
     specificHtml = `
       <div class="input-row">
         <div class="input-group"><label>Issue</label><input type="text" value="${item.issue || "—"}" readonly></div>
         <div class="input-group"><label>Pub. Date</label><input type="text" value="${item.pubDate || "—"}" readonly></div>
-      </div>`;
+      </div>
+      <div class="input-group"><label>Discounted Price (no discount applied)</label><input type="text" value="₱${parseFloat(item.price).toFixed(2)}" readonly style="color:#7a583f;font-weight:600;"></div>`;
   } else if (item.category === "Stationery") {
+    const bulkDiscounted = item.quantity >= 10 ? (item.price * 0.95).toFixed(2) : parseFloat(item.price).toFixed(2);
+    const bulkLabel = item.quantity >= 10 ? "Discounted Price (5% bulk discount applied)" : "Discounted Price (no discount — quantity below 10)";
+    const bulkColor = item.quantity >= 10 ? "#2e7d32" : "#7a583f";
     specificHtml = `
       <div class="input-row">
         <div class="input-group"><label>Brand</label><input type="text" value="${item.brand || "—"}" readonly></div>
         <div class="input-group"><label>Size</label><input type="text" value="${item.size || "—"}" readonly></div>
-      </div>`;
+      </div>
+      <div class="input-group"><label>${bulkLabel}</label><input type="text" value="₱${bulkDiscounted}" readonly style="color:${bulkColor};font-weight:600;"></div>`;
   }
 
   setModalBody(`

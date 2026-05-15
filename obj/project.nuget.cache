@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "L4Je5hQMZ30=",
+  "dgSpecHash": "EGp5fOBZ63w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\ShelfSense.csproj",
+  "projectFilePath": "C:\\Users\\Acer\\Desktop\\COLLEGE\\vsc\\ShelfSense\\ShelfSense.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Angelo\\.nuget\\packages\\mysqlconnector\\2.5.0\\mysqlconnector.2.5.0.nupkg.sha512"
+    "C:\\Users\\Acer\\.nuget\\packages\\mysqlconnector\\2.5.0\\mysqlconnector.2.5.0.nupkg.sha512"
   ],
   "logs": []
 }
