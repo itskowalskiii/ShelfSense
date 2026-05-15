@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ShelfSense")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3a8a1541c8e14f080ab5be6686f2f88abc0d43e9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a7f8819f4571a6dcc3961429acdb061b976eb879")]
 [assembly: System.Reflection.AssemblyProductAttribute("ShelfSense")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ShelfSense")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
