@@ -461,3 +461,17 @@ body {
   padding-top: 15px;
   margin-top: 10px;
 }
+
+/* LOW STOCK HIGHLIGHTING */
+.low-stock-row {
+  background: #fff5f5;
+}
+
+.low-stock-row:hover {
+  background: #ffecec;
+}
+
+.low-stock-qty {
+  color: #c0392b;
+  font-weight: 600;
+}

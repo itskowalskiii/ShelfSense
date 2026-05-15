@@ -56,9 +56,6 @@ C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\scopedcss\bundle\ShelfSense.styles.css
-C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\compressed\qbr8r71p5c-{0}-wuct960rov-wuct960rov.gz
-C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\compressed\1llb87tab5-{0}-qjhpg96kjz-qjhpg96kjz.gz
-C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\compressed\i3tq4osuwy-{0}-59g1j2vuct-59g1j2vuct.gz
 C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\staticwebassets.development.json
@@ -106,3 +103,6 @@ C:\Users\mskay\OneDrive\Desktop\aoop\ShelfSense\obj\Debug\net10.0\refint\ShelfSe
 C:\Users\mskay\OneDrive\Desktop\aoop\ShelfSense\obj\Debug\net10.0\ShelfSense.pdb
 C:\Users\mskay\OneDrive\Desktop\aoop\ShelfSense\obj\Debug\net10.0\ShelfSense.genruntimeconfig.cache
 C:\Users\mskay\OneDrive\Desktop\aoop\ShelfSense\obj\Debug\net10.0\ref\ShelfSense.dll
+C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\compressed\qbr8r71p5c-{0}-f7gce2hbms-f7gce2hbms.gz
+C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\compressed\1llb87tab5-{0}-t01n1cxavv-t01n1cxavv.gz
+C:\Users\Angelo\Shelsense\ShelfSense\obj\Debug\net10.0\compressed\i3tq4osuwy-{0}-g0rrv4n14k-g0rrv4n14k.gz

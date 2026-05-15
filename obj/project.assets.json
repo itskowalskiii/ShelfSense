@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
     "net10.0": {
       "MySqlConnector/2.5.0": {
@@ -56,29 +56,30 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mskay\\.nuget\\packages\\": {}
+    "C:\\Users\\Angelo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mskay\\OneDrive\\Desktop\\aoop\\ShelfSense\\ShelfSense.csproj",
+      "projectUniqueName": "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\ShelfSense.csproj",
       "projectName": "ShelfSense",
-      "projectPath": "C:\\Users\\mskay\\OneDrive\\Desktop\\aoop\\ShelfSense\\ShelfSense.csproj",
-      "packagesPath": "C:\\Users\\mskay\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mskay\\OneDrive\\Desktop\\aoop\\ShelfSense\\obj\\",
+      "projectPath": "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\ShelfSense.csproj",
+      "packagesPath": "C:\\Users\\Angelo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Angelo\\Shelsense\\ShelfSense\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\mskay\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Angelo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -93,11 +94,10 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
-        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "MySqlConnector": {
@@ -124,7 +124,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
