@@ -42,10 +42,100 @@ The system is built on **ASP.NET Core (.NET 10)** for the backend and plain **HT
 
 ## UML Diagram
 
-<div align="center">
+```mermaid
+classDiagram
 
-<!-- Add your UML diagram here -->
-<!-- ![UML Diagram](./docs/uml-diagram.png) -->
+class Product {
+    <<abstract>>
+    +int ProductID
+    +string Name
+    +string Category
+    +decimal Price
+    +string Description
+    +int Quantity
+    +DateTime DateAdded
+    +bool IsLowStock(int threshold)
+    +ShowDetails()* string
+    +CalculateFinalPrice()* decimal
+}
+
+class Book {
+    +string Author
+    +string Publisher
+    +string ISBN
+    +string Genre
+    +ShowDetails()
+    +CalculateFinalPrice()
+}
+
+class Magazine {
+    +int IssueNumber
+    +DateTime PublicationDate
+    +string Publisher
+    +ShowDetails()
+    +CalculateFinalPrice()
+}
+
+class Stationery {
+    +string Type
+    +string Brand
+    +string Size
+    +ShowDetails()
+    +CalculateFinalPrice()
+}
+
+class InventoryService {
+    +AddProduct(Product p)
+    +UpdateProduct(Product p)
+    +DeleteProduct(int id)
+    +GetAllProduct() List
+    +SearchProducts(string kw) List
+    +GetByCategory(string cat) List
+}
+
+class ProductRepository {
+    +GetAll() List~Product~
+    +GetByID(int id) Product
+    +Insert(Product p)
+    +Update(Product p)
+    +Delete(int id)
+    +Search(string kw) List
+}
+
+class StockAlertService {
+    +GetLowStockItems() List
+    +TriggerAlert(int id)
+    +DismissAlert(int id)
+    +GetActiveAlerts() List
+}
+
+class DatabaseHelper {
+    <<static>>
+    +Initialize()
+    +GetConnection() SQLiteCon
+    -CreateTables(conn)
+}
+
+class CategoryService {
+    +GetAllCategories() List
+    +AddCategory(string name)
+    +DeleteCategory(string name)
+    +GetByCategory(string cat) List
+}
+
+Product <|-- Book
+Product <|-- Magazine
+Product <|-- Stationery
+
+CategoryService ..> Product
+InventoryService ..> Product
+InventoryService ..> ProductRepository
+
+StockAlertService ..> ProductRepository
+
+ProductRepository ..> DatabaseHelper
+
+```
 
 </div>
 
@@ -100,33 +190,28 @@ The system is built on **ASP.NET Core (.NET 10)** for the backend and plain **HT
 
 ## How the Program Works
 
-```
-                                  ┌─────────────────────────────────────────────┐
-                                  │           Frontend  (wwwroot/)              │
-                                  │        HTML + CSS + JavaScript              │
-                                  │     User opens this in their browser        │
-                                  └──────────────────┬──────────────────────────┘
-                                                     │  HTTP requests (fetch API)
-                                                     │  
-                                  ┌──────────────────▼──────────────────────────┐
-                                  │         ASP.NET Core Backend                │
-                                  │            Controller Layer                 │
-                                  │  Receives requests, routes them to services │
-                                  └──────────────────┬──────────────────────────┘
-                                                     │  calls
-                                                     │  
-                                  ┌──────────────────▼──────────────────────────┐
-                                  │            Service Layer                    │
-                                  │   InventoryService · StockAlertService      │
-                                  │  All business rules and logic live here     │
-                                  └──────────────────┬──────────────────────────┘
-                                                     │  reads / writes
-                                                     │  
-                                  ┌──────────────────▼──────────────────────────┐
-                                  │           Database Layer                    │
-                                  │         DatabaseHelper + MySQL              │
-                                  │  Stores and retrieves all product data      │
-                                  └─────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+
+    A["Frontend (wwwroot/)
+    HTML + CSS + JavaScript
+    User opens this in their browser"]
+
+    B["ASP.NET Core Backend
+    Controller Layer
+    Receives requests and routes them to services"]
+
+    C["Service Layer
+    InventoryService · StockAlertService
+    Business rules and logic"]
+
+    D["Database Layer
+    DatabaseHelper + MySQL
+    Stores and retrieves product data"]
+
+    A -->|"HTTP Requests (Fetch API)"| B
+    B -->|"Calls"| C
+    C -->|"Reads / Writes"| D
 ```
 
 When a user interacts with the app (e.g., clicks "Add Book"), the browser sends a request to the ASP.NET Core backend. The **Controller** receives it and delegates to the **Service layer**, which applies the business logic (e.g., validating the product or checking stock). The **DatabaseHelper** then communicates with MySQL to save or retrieve data, and the result is sent back to the browser.
@@ -174,35 +259,94 @@ ShelfSense/
 ```
 
 ---
+## Prerequisites
+
+Before running ShelfSense, make sure you have the following installed:
+
+| Tool | Version | Purpose | Download |
+|:--|:--|:--|:--|
+| .NET SDK | 10.0+ | Runs the ASP.NET Core backend | [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) |
+| XAMPP | Latest | Provides the MySQL database server | [apachefriends.org](https://www.apachefriends.org/download.html) |
+| Visual Studio Code | Latest | Code editor | [code.visualstudio.com](https://code.visualstudio.com/) |
+| C# Dev Kit | Latest | VS Code extension for C# | Install inside VS Code |
+| Git | Latest | Clone the repository | [git-scm.com](https://git-scm.com/) |
+
+---
 
 ## Getting Started
 
-### Prerequisites
+### Step 1 — Clone the Repository
 
-| Tool | Purpose |
-|:--|:--|
-| [.NET SDK 10.0+](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) | Run the application |
-| [XAMPP](https://www.apachefriends.org/download.html) | MySQL database |
-| [Visual Studio Code](https://code.visualstudio.com/) | Code editor |
-
-### How to Run
+Open a terminal and run:
 
 ```bash
-# 1. Open XAMPP and start MySQL
-
-# 2. Open a terminal and connect
-mysql -u root -p
-
-# 3. Select the database
-use ShelfSenseDatabase;
-
-# 4. Open the project in VS Code, then run
-dotnet run
-
-# 5. Press F5 to launch in the browser
+git clone https://github.com/itskowalskiii/ShelfSense.git
+cd ShelfSense
 ```
 
-> Make sure MySQL is running in XAMPP before launching the application.
+### Step 2 — Start MySQL via XAMPP
+
+1. Open **XAMPP Control Panel**
+2. Click **Start** next to **MySQL**
+3. Wait until the status turns green
+
+> MySQL must be running before you launch the app, otherwise the connection will fail.
+
+### Step 3 — Set Up the Database
+
+Open a terminal and connect to MySQL:
+
+```bash
+mysql -u root -p
+```
+
+Then create and set up the database:
+
+```sql
+CREATE DATABASE ShelfSenseDatabase;
+USE ShelfSenseDatabase;
+SOURCE path/to/shelfsense_db.sql;
+```
+
+> Replace `path/to/shelfsense_db.sql` with the actual path to the `.sql` file inside the project folder.
+
+### Step 4 — Configure the Connection String
+
+Open `appsettings.json` and make sure the connection string matches your MySQL setup:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=ShelfSenseDatabase;User=root;Password=;"
+  }
+}
+```
+
+> If your MySQL has a password, fill it in after `Password=`.
+
+### Step 5 — Restore Dependencies
+
+In the project folder, run:
+
+```bash
+dotnet restore
+```
+
+This installs all required NuGet packages including `MySqlConnector`.
+
+### Step 6 — Run the Application
+
+```bash
+dotnet run
+```
+
+The terminal will show a URL like:
+
+### Step 7 — Open in Browser
+
+Press **F5** in VS Code, or manually open your browser and go to:
+
+You should see the ShelfSense dashboard.
 
 ---
 
@@ -210,12 +354,12 @@ dotnet run
 
 | Problem | Solution |
 |:--|:--|
-| Cannot connect to database | Verify that MySQL is running in XAMPP and that the credentials in `appsettings.json` are correct |
-| `dotnet` command not found | Install the .NET 10 SDK from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) |
-| Page does not load | Confirm `dotnet run` is active and visit the exact URL shown in the terminal output |
-| `MySqlConnector` error | Run `dotnet restore` to reinstall NuGet packages |
-
----
+| Cannot connect to database | Make sure MySQL is running in XAMPP and the credentials in `appsettings.json` are correct |
+| `dotnet` command not found | Install .NET 10 SDK from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) |
+| Page does not load | Confirm `dotnet run` is active and visit the exact URL shown in the terminal |
+| `MySqlConnector` error | Run `dotnet restore` to reinstall packages |
+| Port already in use | Change the port in `launchSettings.json` or close the app using that port |
+| Database not found | Make sure you ran the `.sql` file and the database name matches `appsettings.json` |
 
 ## Developers
 
