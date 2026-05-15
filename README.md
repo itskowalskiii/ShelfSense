@@ -275,32 +275,22 @@ Before running ShelfSense, make sure you have the following installed:
 
 ## Getting Started
 
-### Step 1 — Clone the Repository
-
-Open a terminal and run:
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/itskowalskiii/ShelfSense.git
 cd ShelfSense
 ```
 
-### Step 2 — Start MySQL via XAMPP
+### 2. Start MySQL
 
-1. Open **XAMPP Control Panel**
-2. Click **Start** next to **MySQL**
-3. Wait until the status turns green
+Open **XAMPP Control Panel** and start **MySQL**.
 
-> MySQL must be running before you launch the app, otherwise the connection will fail.
-
-### Step 3 — Set Up the Database
-
-Open a terminal and connect to MySQL:
+### 3. Create the Database
 
 ```bash
 mysql -u root -p
 ```
-
-Then create and set up the database:
 
 ```sql
 CREATE DATABASE ShelfSenseDatabase;
@@ -308,11 +298,11 @@ USE ShelfSenseDatabase;
 SOURCE path/to/shelfsense_db.sql;
 ```
 
-> Replace `path/to/shelfsense_db.sql` with the actual path to the `.sql` file inside the project folder.
+> Replace `path/to/shelfsense_db.sql` with the actual file path.
 
-### Step 4 — Configure the Connection String
+### 4. Configure Connection String
 
-Open `appsettings.json` and make sure the connection string matches your MySQL setup:
+Edit `appsettings.json`:
 
 ```json
 {
@@ -322,31 +312,23 @@ Open `appsettings.json` and make sure the connection string matches your MySQL s
 }
 ```
 
-> If your MySQL has a password, fill it in after `Password=`.
+> Add your MySQL password if needed.
 
-### Step 5 — Restore Dependencies
-
-In the project folder, run:
+### 5. Restore Dependencies
 
 ```bash
 dotnet restore
 ```
 
-This installs all required NuGet packages including `MySqlConnector`.
-
-### Step 6 — Run the Application
+### 6. Run the Application
 
 ```bash
 dotnet run
 ```
 
-The terminal will show a URL like:
+### 7. Open the App
 
-### Step 7 — Open in Browser
-
-Press **F5** in VS Code, or manually open your browser and go to:
-
-You should see the ShelfSense dashboard.
+Open the URL shown in the terminal or press **F5** in VS Code.
 
 ---
 
@@ -360,6 +342,8 @@ You should see the ShelfSense dashboard.
 | `MySqlConnector` error | Run `dotnet restore` to reinstall packages |
 | Port already in use | Change the port in `launchSettings.json` or close the app using that port |
 | Database not found | Make sure you ran the `.sql` file and the database name matches `appsettings.json` |
+
+---
 
 ## Developers
 
