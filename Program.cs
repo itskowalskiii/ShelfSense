@@ -1,12 +1,12 @@
 using ShelfSense.Database;
 using ShelfSense.Services;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddJsonOptions(opts =>
 {
     opts.JsonSerializerOptions.Converters.Add(new ShelfSense.Models.ProductJsonConverter());
-    // Prevents recursive serialization issues with DiscountedPrice
     opts.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 builder.Services.AddSingleton<DatabaseHelper>();
@@ -21,9 +21,14 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors();
-app.UseStaticFiles();  // static files first (serves HTML/CSS/JS)
-app.UseRouting();      // ← add this
-app.MapControllers();  // controllers after routing is established
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "Frontend", "wwwroot")),
+    RequestPath = ""
+});
+app.UseRouting();
+app.MapControllers();
 app.MapGet("/", () => Results.Redirect("/html/index.html"));
 
 app.Run();
